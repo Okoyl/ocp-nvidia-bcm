@@ -6,21 +6,17 @@ COPY files/RPM-GPG-KEY-cm /etc/pki/rpm-gpg/
 COPY files/start_cmd.sh /root/start_cmd.sh
 
 # EPEL is required for slurm dependencies
-RUN dnf install -y epel-release
-
-RUN dnf install -y cmdaemon procps-ng && dnf clean all
+RUN dnf install -y cmdaemon procps-ng epel-release && dnf clean all
 
 # Slurm stuff to pass health checks
-RUN dnf install -y slurm24.05 slurm24.05-client slurm24.05-contribs slurm24.05-devel slurm24.05-perlapi slurm24.05-slurmdbd
+RUN dnf install -y epel-release slurm24.05 slurm24.05-client slurm24.05-contribs slurm24.05-devel slurm24.05-perlapi slurm24.05-slurmdbd && dnf clean all
 
 # Debugging
-RUN dnf install -y iputils net-tools psmisc nano
+RUN dnf install -y iputils net-tools psmisc nano && dnf clean all
 
 # stuff to pass bcm Health check
-RUN dnf install -y chrony sudo
+RUN dnf install -y iproute nfs-utils && dnf clean all
 RUN useradd -m cmsupport
-RUN gpasswd -a cmsupport wheel
-
-RUN echo "10.141.255.254    bcm10-headnode.cm.cluster bcm10-headnode master.cm.cluster master localmaster.cm.cluster localmasterldapserver.cm.cluster ldapserver" >> /etc/hosts
+# RUN gpasswd -a cmsupport wheel
 
 RUN sed -i 's/master/slave/' /etc/cm-release
