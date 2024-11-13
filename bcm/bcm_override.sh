@@ -5,11 +5,10 @@ mkdir /var/www/html/workaround/certificates
 mkdir /var/www/html/workaround/rhcos
 
 mkdir /tftpboot/images/rhcos/
-wget http://api.openshift.com/api/assisted-images/boot-artifacts/kernel?arch=x86_64&version=4.17 -O /tftpboot/images/rhcos/kernel
+wget "http://api.openshift.com/api/assisted-images/boot-artifacts/kernel?arch=x86_64&version=4.17" -O /tftpboot/images/rhcos/kernel
 
 
-cd /var/www/html/workaround/rhcos
-wget http://api.openshift.com/api/assisted-images/boot-artifacts/rootfs?arch=x86_64&version=4.17 -O /var/www/html/workaround/rhcos/rootfs
+wget "http://api.openshift.com/api/assisted-images/boot-artifacts/rootfs?arch=x86_64&version=4.17" -O /var/www/html/workaround/rhcos/rootfs
 
 
 # PXE SETUP for RHCOS
