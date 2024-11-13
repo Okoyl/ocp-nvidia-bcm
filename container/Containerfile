@@ -21,6 +21,6 @@ RUN dnf install -y chrony sudo
 RUN useradd -m cmsupport
 RUN gpasswd -a cmsupport wheel
 
-RUN echo "10.141.255.254     bcm10-headnode.cm.cluster bcm10-headnode master.cm.cluster master localmaster.cm.cluster localmaster>
+RUN echo "10.141.255.254    bcm10-headnode.cm.cluster bcm10-headnode master.cm.cluster master localmaster.cm.cluster localmasterldapserver.cm.cluster ldapserver" >> /etc/hosts
 
 RUN sed -i 's/master/slave/' /etc/cm-release
