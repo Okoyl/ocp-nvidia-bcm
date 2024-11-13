@@ -3,7 +3,7 @@ FROM quay.io/centos/centos:stream9
 COPY files/cm.repo /etc/yum.repos.d/cm.repo
 COPY files/RPM-GPG-KEY-cm /etc/pki/rpm-gpg/
 
-COPY files/start_cmd.sh /root/start_cmd.sh
+COPY files/start_cmd.sh /usr/local/bin/start_cmd.sh
 
 # EPEL is required for slurm dependencies
 RUN dnf install -y cmdaemon procps-ng epel-release && dnf clean all
