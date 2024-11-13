@@ -1,13 +1,20 @@
 #!/bin/bash
 
-mkdir /var/www/html/workaround
-mkdir /var/www/html/workaround/certificates
-mkdir /var/www/html/workaround/rhcos
+if [ -z "$1" ]; then
+    echo "Please provide ipxe script"
+    exit 1
+fi
 
-mkdir /tftpboot/images/rhcos/
+mkdir -p /var/www/html/workaround
+mkdir -p /var/www/html/workaround/certificates
+mkdir -p /var/www/html/workaround/rhcos
+
+mkdir -p /tftpboot/images/rhcos/
+
+INITRD_URL=$(grep -oP '^initrd --name initrd \Khttp[^\s]+' $1)
+
+wget $INITRD_URL -O /tftpboot/images/rhcos/initrd
 wget "http://api.openshift.com/api/assisted-images/boot-artifacts/kernel?arch=x86_64&version=4.17" -O /tftpboot/images/rhcos/kernel
-
-
 wget "http://api.openshift.com/api/assisted-images/boot-artifacts/rootfs?arch=x86_64&version=4.17" -O /var/www/html/workaround/rhcos/rootfs
 
 
