@@ -3,10 +3,6 @@ FROM quay.io/centos/centos:stream9
 COPY files/cm.repo /etc/yum.repos.d/cm.repo
 COPY files/RPM-GPG-KEY-cm /etc/pki/rpm-gpg/
 
-COPY files/cluster.pem /cm/local/apps/cmd/etc/cluster.pem
-COPY files/cert.pem /cm/local/apps/cmd/etc
-COPY files/cert.key /cm/local/apps/cmd/etc
-
 COPY files/start_cmd.sh /root/start_cmd.sh
 
 # EPEL is required for slurm dependencies
@@ -14,14 +10,16 @@ RUN dnf install -y epel-release
 
 RUN dnf install -y cmdaemon procps-ng && dnf clean all
 
-# Slurm stuff
+# Slurm stuff to pass health checks
 RUN dnf install -y slurm24.05 slurm24.05-client slurm24.05-contribs slurm24.05-devel slurm24.05-perlapi slurm24.05-slurmdbd
 
 # Debugging
 RUN dnf install -y iputils net-tools psmisc nano
 
 # stuff to pass bcm Health check
-RUN dnf install -y chrony
+RUN dnf install -y chrony sudo
+RUN useradd -m cmsupport
+RUN gpasswd -a cmsupport wheel
 
 RUN echo "10.141.255.254     bcm10-headnode.cm.cluster bcm10-headnode master.cm.cluster master localmaster.cm.cluster localmaster>
 
