@@ -48,6 +48,15 @@ wait_for_host() {
   echo "Host status is known."
 }
 
+wait_for_cluster_state() {
+  until [[ "$(aicli -o json info cluster "$cluster_name" | jq -r .status)" == "$1" ]]; do
+      echo "Waiting for cluster to be $1..."
+      sleep 5  # Wait 5 seconds before checking again
+  done
+
+  echo "Cluster is $1."
+}
+
 start_installation() {
   host_id=$(aicli -o json info cluster $cluster_name  | jq -r .hosts[0].id)
 
