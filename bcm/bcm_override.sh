@@ -57,6 +57,11 @@ EOF
   echo "$DEFAULT_PXE" >> $DEFAULT_PXE_FILE
 }
 
+headnode_config() {
+  sed -i 's/Port = 8080/Port = 18080/' /cm/local/apps/cmd/etc/cmd.conf
+  systemctl restart cmd
+}
+
 if [ -z "$1" ]; then
     echo "Please provide ipxe script"
     exit 1

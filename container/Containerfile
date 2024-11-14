@@ -20,3 +20,4 @@ RUN useradd -m cmsupport
 # RUN gpasswd -a cmsupport wheel
 
 RUN sed -i 's/master/slave/' /etc/cm-release
+RUN sed -i 's/Port = 8080/Port = 18080/' /cm/local/apps/cmd/etc/cmd.conf
