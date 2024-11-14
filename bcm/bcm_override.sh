@@ -12,7 +12,7 @@ setup_dirs() {
   if [ -f /var/www/html/workaround/certificates ]; then
     return
   fi
-  ln -s /cm/node-installer/certificates /var/www/html/workaround/certificates
+  ln -s /cm/node-installer/certificates /var/www/html/workaround/certificates || true
   chmod 777 /var/www/html/workaround/certificates
 }
 
@@ -30,6 +30,7 @@ download_rhcos() {
 
   wget "http://api.openshift.com/api/assisted-images/boot-artifacts/kernel?arch=x86_64&version=4.17" -O /tftpboot/images/rhcos/kernel
   wget "http://api.openshift.com/api/assisted-images/boot-artifacts/rootfs?arch=x86_64&version=4.17" -O /var/www/html/workaround/rhcos/rootfs
+  systemctl restart httpd
 }
 
 setup_pxe() {

@@ -1,0 +1,49 @@
+variant: openshift
+version: 4.17.0
+metadata:
+  name: 99-master-cmd
+  labels:
+    machineconfiguration.openshift.io/role: master
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - SSH-KEY
+systemd:
+  units:
+    - name: cmd.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=CMDAEMON
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=bash -c "echo \"SSH-KEY\" > /root/.ssh/authorized_keys"
+        ExecStartPre=-/bin/podman kill cmd
+        ExecStartPre=-/bin/podman rm cmd
+        ExecStart=/bin/podman run --net=host --privileged --ipc=host --pid=host -e SYSTEMD_IGNORE_CHROOT=yes -v /usr/lib/firmware:/usr/lib/firmware \
+        -v /run:/run -e SYSTEMCTL_FORCE_BUS=1 --name cmd -v /run:/run -v /etc/cmd_keys/cacert.pem:/cm/local/apps/cmd/etc/cacert.pem \
+          -v /etc/cmd_keys/cluster.pem:/cm/local/apps/cmd/etc/cluster.pem -v /etc/cmd_keys/cert.key:/cm/local/apps/cmd/etc/cert.key \
+          -v /etc/cmd_keys/cert.pem:/cm/local/apps/cmd/etc/cert.pem -v /usr/bin/chronyc:/usr/bin/chronyc -v /etc/chrony.conf:/etc/chrony.conf \
+          quay.io/rh-ee-eelgaev/nvidia-cmd:latest /usr/local/bin/start_cmd.sh
+        ExecStop=-/bin/podman kill cmd
+        [Install]
+        WantedBy=multi-user.target
+storage:
+  trees:
+    - local: keys
+      path: /etc/cmd_keys
+  files:
+    - path: /etc/hosts
+      overwrite: true
+      contents:
+        local: hosts
+      mode: 0644
+    - path: /etc/ssh/sshd_config.d/40-rhcos-defaults.conf
+      overwrite: true
+      contents:
+        source: data:text/plain;base64,UGFzc3dvcmRBdXRoZW50aWNhdGlvbiBubyAKUGVybWl0Um9vdExvZ2luIHllcwpDbGllbnRBbGl2ZUludGVydmFsIDE4MA==
+      mode: 0644
