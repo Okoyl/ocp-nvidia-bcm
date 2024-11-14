@@ -22,7 +22,7 @@ create_ignition_override_param_file() {
 
   cp ignition-override/discovery-butane.yaml $workdir/discovery-butane.yaml
   sed -i "s/SET-HOSTNAME/$hostname/g" $workdir/discovery-butane.yaml
-  sed -i "s/SSH-KEY/$(cat $HOME/.ssh/id_ecdsa.pub)/g" $workdir/discovery-butane.yaml
+  sed -i "s|SSH-KEY|$(cat "$HOME/.ssh/id_ecdsa.pub")|g" /tmp/ignition/discovery-butane.yaml
 
   podman run --interactive --net=host --rm --security-opt label=disable -v $workdir:/pwd --workdir /pwd \
     quay.io/coreos/butane:release -d /pwd --pretty --strict discovery-butane.yaml > $ignition_output
