@@ -65,13 +65,3 @@ start_installation() {
   aicli create  manifest --dir $manifests $cluster_name
   aicli start cluster $cluster_name
 }
-
-create_ignition_override_param_file
-discovery_iso_override
-source bcm/bcm_override.sh
-# TODO wait for host to be ready
-
-wait_for_host
-start_installation
-
-echo "Done"
