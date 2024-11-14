@@ -73,3 +73,4 @@ download_pxescript $1
 setup_dirs
 download_rhcos $1
 setup_pxe
+headnode_config
