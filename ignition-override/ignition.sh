@@ -65,7 +65,7 @@ start_installation() {
 
   rm -rf $manifests
   cp ignition-override/machine-config.yaml $workdir/machine-config.yaml
-  sed -i "s/SSH-KEY/$(cat $HOME/.ssh/id_ecdsa.pub)/g" $workdir/machine-config.yaml
+  sed -i "s|SSH-KEY|$(cat "$HOME/.ssh/id_ecdsa.pub")|g" $workdir/machine-config.yaml
 
   mkdir -p $manifests
   podman run --interactive --net=host --rm --security-opt label=disable --volume $workdir:/pwd \
